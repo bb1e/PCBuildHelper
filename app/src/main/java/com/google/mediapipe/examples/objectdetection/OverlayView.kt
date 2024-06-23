@@ -6,10 +6,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.objectdetector.ObjectDetectorResult
 import kotlin.math.max
-import kotlin.math.min
 
 class OverlayView(context: Context?, attrs: AttributeSet?) :
     View(context, attrs) {
@@ -81,19 +79,16 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
             val left = floats.left * scaleFactor
             val right = floats.right * scaleFactor
 
-            // Draw bounding box around detected objects
             val drawableRect = RectF(left, top, right, bottom)
             canvas.drawRect(drawableRect, boxPaint)
 
-            // Create text to display alongside detected objects
             val category = results?.detections()!![index].categories()[0]
             val drawableText =
                 category.categoryName() + " " + String.format(
                     "%.2f",
                     category.score()
                 )
-            //textView?.text = category.categoryName()
-            // Draw rect behind display text
+
             textBackgroundPaint.getTextBounds(
                 drawableText,
                 0,
@@ -110,7 +105,6 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
                 textBackgroundPaint
             )
 
-            // Draw text for detected object
             canvas.drawText(
                 drawableText,
                 left,
@@ -135,37 +129,24 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
 
         categoryNames.clear()
 
-        // Add new category names if results are available
         results?.detections()?.forEach { detection ->
             detection.categories().forEach { category ->
                 categoryNames.add(category.categoryName())
             }
         }
 
-        // Update the TextView with detected object names or clear it if no detections
         textView.text = if (categoryNames.isNotEmpty()) {
             categoryNames.joinToString(", ")
         } else {
             ""
         }
 
-        // Update the TextView with detected object names
-        //textView.text = categoryNames.joinToString(", ")
-
-        // Calculates the new width and height of an image after it has been rotated.
-        // If `imageRotation` is 0 or 180, the new width and height are the same
-        // as the original width and height.
-        // If `imageRotation` is 90 or 270, the new width and height are swapped.
         val rotatedWidthHeight = when (imageRotation) {
             0, 180 -> Pair(outputWidth, outputHeight)
             90, 270 -> Pair(outputHeight, outputWidth)
             else -> return
         }
 
-        // Images, videos are displayed in FIT_START mode.
-        // Camera live streams is displayed in FILL_START mode. So we need to scale
-        // up the bounding box to match with the size that the images/videos/live streams being
-        // displayed.
         scaleFactor = max(
             width * 1f / rotatedWidthHeight.first,
             height * 1f / rotatedWidthHeight.second
