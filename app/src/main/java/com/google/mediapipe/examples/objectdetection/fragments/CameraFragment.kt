@@ -217,20 +217,25 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     override fun onResults(resultBundle: ObjectDetectorHelper.ResultBundle) {
         activity?.runOnUiThread {
             if (_fragmentCameraBinding != null) {
-                // Pass necessary information to OverlayView for drawing on the canvas
-                val detectionResult = resultBundle.results[0]
-
-                fragmentCameraBinding.overlay.setResults(
-                    detectionResult,
-                    fragmentCameraBinding.tvSubtitle,
-                    resultBundle.inputImageHeight,
-                    resultBundle.inputImageWidth,
-                    resultBundle.inputImageRotation
-                )
+                if (resultBundle.results.isEmpty()) {
+                    // Clear the overlay and the TextView if there are no results
+                    fragmentCameraBinding.overlay.clear()
+                } else {
+                    // Pass necessary information to OverlayView for drawing on the canvas
+                    val detectionResult = resultBundle.results[0]
+                    fragmentCameraBinding.overlay.setResults(
+                        detectionResult,
+                        fragmentCameraBinding.tvSubtitle,  // Pass the TextView reference
+                        resultBundle.inputImageHeight,
+                        resultBundle.inputImageWidth,
+                        resultBundle.inputImageRotation
+                    )
+                }
                 fragmentCameraBinding.overlay.invalidate()
             }
         }
     }
+
 
     override fun onError(error: String, errorCode: Int) {
         activity?.runOnUiThread {

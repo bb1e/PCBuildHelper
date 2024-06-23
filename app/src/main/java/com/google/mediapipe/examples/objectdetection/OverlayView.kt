@@ -92,7 +92,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
                     "%.2f",
                     category.score()
                 )
-            textView?.text = category.categoryName()
+            //textView?.text = category.categoryName()
             // Draw rect behind display text
             textBackgroundPaint.getTextBounds(
                 drawableText,
@@ -133,10 +133,20 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
         this.outputHeight = outputHeight
         this.outputRotate = imageRotation
 
+        categoryNames.clear()
+
+        // Add new category names if results are available
         results?.detections()?.forEach { detection ->
             detection.categories().forEach { category ->
                 categoryNames.add(category.categoryName())
             }
+        }
+
+        // Update the TextView with detected object names or clear it if no detections
+        textView.text = if (categoryNames.isNotEmpty()) {
+            categoryNames.joinToString(", ")
+        } else {
+            ""
         }
 
         // Update the TextView with detected object names
