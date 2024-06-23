@@ -1,18 +1,3 @@
-/*
- * Copyright 2022 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *             http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.google.mediapipe.examples.objectdetection.fragments
 
 import android.annotation.SuppressLint
@@ -65,8 +50,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     override fun onResume() {
         super.onResume()
-        // Make sure that all permissions are still present, since the
-        // user could have removed them while the app was in paused state.
         if (!PermissionsFragment.hasPermissions(requireContext())) {
             Navigation.findNavController(
                 requireActivity(),
@@ -142,17 +125,13 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                 setUpCamera()
             }
         }
-        fragmentCameraBinding.overlay.setRunningMode(RunningMode.LIVE_STREAM)
     }
 
-
-    // Update the values displayed in the bottom sheet. Reset detector.
     private fun updateControlsUi() {
         backgroundExecutor.execute {
             objectDetectorHelper.clearObjectDetector()
             objectDetectorHelper.setupObjectDetector()
         }
-
         fragmentCameraBinding.overlay.clear()
     }
 
@@ -235,24 +214,19 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             fragmentCameraBinding.viewFinder.display.rotation
     }
 
-    // Update UI after objects have been detected. Extracts original image height/width
-    // to scale and place bounding boxes properly through OverlayView
     override fun onResults(resultBundle: ObjectDetectorHelper.ResultBundle) {
         activity?.runOnUiThread {
             if (_fragmentCameraBinding != null) {
-
                 // Pass necessary information to OverlayView for drawing on the canvas
                 val detectionResult = resultBundle.results[0]
-                if (isAdded) {
-                    fragmentCameraBinding.overlay.setResults(
-                        detectionResult,
-                        resultBundle.inputImageHeight,
-                        resultBundle.inputImageWidth,
-                        resultBundle.inputImageRotation
-                    )
-                }
 
-                // Force a redraw
+                fragmentCameraBinding.overlay.setResults(
+                    detectionResult,
+                    fragmentCameraBinding.tvSubtitle,
+                    resultBundle.inputImageHeight,
+                    resultBundle.inputImageWidth,
+                    resultBundle.inputImageRotation
+                )
                 fragmentCameraBinding.overlay.invalidate()
             }
         }

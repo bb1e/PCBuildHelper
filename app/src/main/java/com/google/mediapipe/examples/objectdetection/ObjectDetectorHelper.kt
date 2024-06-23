@@ -118,11 +118,10 @@ class ObjectDetectorHelper(
     )
 
     companion object {
-        const val MAX_RESULTS_DEFAULT = 3
+        const val MAX_RESULTS_DEFAULT = 7
         const val THRESHOLD_DEFAULT = 0.5F
         const val OTHER_ERROR = 0
         const val GPU_ERROR = 1
-
         const val TAG = "ObjectDetectorHelper"
     }
 

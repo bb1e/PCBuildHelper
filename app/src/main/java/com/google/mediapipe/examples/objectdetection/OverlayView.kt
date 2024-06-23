@@ -1,25 +1,10 @@
-/*
- * Copyright 2022 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.mediapipe.examples.objectdetection
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.objectdetector.ObjectDetectorResult
@@ -38,7 +23,8 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
     private var outputWidth = 0
     private var outputHeight = 0
     private var outputRotate = 0
-    private var runningMode: RunningMode = RunningMode.IMAGE
+    private var textView: TextView? = null
+    private val categoryNames = mutableListOf<String>()
 
     init {
         initPaints()
@@ -51,10 +37,6 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
         boxPaint.reset()
         invalidate()
         initPaints()
-    }
-
-    fun setRunningMode(runningMode: RunningMode) {
-        this.runningMode = runningMode
     }
 
     private fun initPaints() {
@@ -83,12 +65,8 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
             val matrix = Matrix()
             matrix.postTranslate(-outputWidth / 2f, -outputHeight / 2f)
 
-            // Rotate box.
             matrix.postRotate(outputRotate.toFloat())
 
-            // If the outputRotate is 90 or 270 degrees, the translation is
-            // applied after the rotation. This is because a 90 or 270 degree rotation
-            // flips the image vertically or horizontally, respectively.
             if (outputRotate == 90 || outputRotate == 270) {
                 matrix.postTranslate(outputHeight / 2f, outputWidth / 2f)
             } else {
@@ -114,7 +92,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
                     "%.2f",
                     category.score()
                 )
-
+            textView?.text = category.categoryName()
             // Draw rect behind display text
             textBackgroundPaint.getTextBounds(
                 drawableText,
@@ -144,14 +122,25 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
 
     fun setResults(
         detectionResults: ObjectDetectorResult,
+        textView: TextView,
         outputHeight: Int,
         outputWidth: Int,
         imageRotation: Int
     ) {
         results = detectionResults
+        this.textView = textView
         this.outputWidth = outputWidth
         this.outputHeight = outputHeight
         this.outputRotate = imageRotation
+
+        results?.detections()?.forEach { detection ->
+            detection.categories().forEach { category ->
+                categoryNames.add(category.categoryName())
+            }
+        }
+
+        // Update the TextView with detected object names
+        //textView.text = categoryNames.joinToString(", ")
 
         // Calculates the new width and height of an image after it has been rotated.
         // If `imageRotation` is 0 or 180, the new width and height are the same
@@ -167,23 +156,10 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
         // Camera live streams is displayed in FILL_START mode. So we need to scale
         // up the bounding box to match with the size that the images/videos/live streams being
         // displayed.
-        scaleFactor = when (runningMode) {
-            RunningMode.IMAGE,
-            RunningMode.VIDEO -> {
-                min(
-                    width * 1f / rotatedWidthHeight.first,
-                    height * 1f / rotatedWidthHeight.second
-                )
-            }
-
-            RunningMode.LIVE_STREAM -> {
-                max(
-                    width * 1f / rotatedWidthHeight.first,
-                    height * 1f / rotatedWidthHeight.second
-                )
-            }
-        }
-
+        scaleFactor = max(
+            width * 1f / rotatedWidthHeight.first,
+            height * 1f / rotatedWidthHeight.second
+        )
         invalidate()
     }
 
