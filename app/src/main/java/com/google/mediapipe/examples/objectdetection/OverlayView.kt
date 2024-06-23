@@ -135,11 +135,36 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
             }
         }
 
-        textView.text = if (categoryNames.isNotEmpty()) {
-            categoryNames.joinToString(", ")
+        if (categoryNames.isNotEmpty()) {
+            if (!categoryNames.contains("cpu") && !categoryNames.contains("cpu_cooler")){
+                textView.text = "No CPU detected! All computers need a brain!"
+            } else if (!categoryNames.contains("cpu_cooler")){
+                textView.text =  "No CPU Cooler detected, a cooler is required to keep your cpu from running hot! Make sure to apply thermal paste"
+            } else if (!categoryNames.contains("disk_drive")){
+                textView.text = "Don't forget to add storage!"
+            } else if (!categoryNames.contains("front_panel")){
+                textView.text = "Ups, I don't see the front panel"
+            } else if (!categoryNames.contains("gpu")){
+                textView.text = "No dedicated GPU detected, make sure your cpu has integrated graphics!"
+            } else if (!categoryNames.contains("motherboard")){
+                textView.text = "No motherboard detected, a motherboard is the base of any computer"
+            } else if (!categoryNames.contains("optical_drive")){
+                textView.text = "Where is the optical drive?"
+            } else if (!categoryNames.contains("psu")){
+                textView.text = "Make sure you have a PSU supplying energy to your computer"
+            } else if (!categoryNames.contains("ram_stick")){
+                textView.text = "Make sure you have at least a stick of ram"
+            } else if (!categoryNames.contains("rear_io")){
+                textView.text = "Where will you connect your peripherals? Don't forget to add the rear io"
+            }
         } else {
             ""
         }
+        /*textView.text = if (categoryNames.isNotEmpty()) {
+            categoryNames.joinToString(", ")
+        } else {
+            ""
+        }*/
 
         val rotatedWidthHeight = when (imageRotation) {
             0, 180 -> Pair(outputWidth, outputHeight)
