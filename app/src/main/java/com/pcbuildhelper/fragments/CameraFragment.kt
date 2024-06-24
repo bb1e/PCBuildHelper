@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
-import com.google.mediapipe.examples.objectdetection.fragments.PermissionsFragment
+import com.pcbuildhelper.fragments.PermissionsFragment
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.pcbuildhelper.MainViewModel
 import com.pcbuildhelper.ObjectDetectorHelper

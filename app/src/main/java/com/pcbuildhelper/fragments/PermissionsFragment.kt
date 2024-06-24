@@ -1,4 +1,4 @@
-package com.google.mediapipe.examples.objectdetection.fragments
+package com.pcbuildhelper.fragments
 
 import android.Manifest
 import android.content.Context
@@ -61,8 +61,6 @@ class PermissionsFragment : Fragment() {
     }
 
     companion object {
-
-        /** Convenience method used to check if all permissions required by this app are granted */
         fun hasPermissions(context: Context) =
             PERMISSIONS_REQUIRED.all {
                 ContextCompat.checkSelfPermission(
