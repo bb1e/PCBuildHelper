@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         app:scaleType="fillStart"/>
 
-    <com.google.mediapipe.examples.objectdetection.OverlayView
+    <com.pcbuildhelper.OverlayView
         android:id="@+id/overlay"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />

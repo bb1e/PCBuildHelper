@@ -9,7 +9,7 @@ android {
     compileSdkVersion 33
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        applicationId "com.google.mediapipe.examples.objectdetection"
+        applicationId "com.pcbuildhelper"
         minSdkVersion 24
         targetSdkVersion 33
         versionCode 1
@@ -42,7 +42,7 @@ android {
     androidResources {
         noCompress 'tflite'
     }
-    namespace 'com.google.mediapipe.examples.objectdetection'
+    namespace 'com.pcbuildhelper'
 
 }
 
