@@ -1,6 +1,7 @@
 package com.pcbuildhelper
 
 import android.os.Bundle
+import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -18,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
-
     }
 
     override fun onBackPressed() {

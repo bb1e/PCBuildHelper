@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="180dp"
         android:layout_gravity="bottom"
         android:background="@color/bottom_sheet_background"
         android:clipToPadding="true"
@@ -30,7 +30,9 @@
             android:layout_height="wrap_content"
             android:text="Instructions and Tips:"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="22sp"
+            android:paddingTop="5dp"
+            android:paddingStart="10dp"
             android:textStyle="bold" />
 
         <TextView
@@ -38,7 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="17sp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_results"
